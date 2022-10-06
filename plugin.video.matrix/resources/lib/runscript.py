@@ -42,8 +42,8 @@ class cClear:
 
     def main(self, env):
 
-        if (env == 'resolveurl'):
-            addon('script.module.resolveurl').openSettings()
+        if (env == 'urlresolver'):
+            addon('script.module.urlresolver').openSettings()
             return
 
         elif (env == 'metahandler'):
