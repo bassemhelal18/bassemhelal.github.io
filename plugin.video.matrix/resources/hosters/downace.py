@@ -6,6 +6,7 @@ from resources.lib.parser import cParser
 from resources.lib.comaddon import VSlog
 # from resources.lib.packer import cPacker
 
+
 class cHoster(iHoster):
 
     def __init__(self):
@@ -20,15 +21,15 @@ class cHoster(iHoster):
         sHtmlContent = oRequest.request()
 
         oParser = cParser()
-        #sPattern = '(eval\(function\(p,a,c,k,e(?:.|\s)+?\))<\/script>'
-        #aResult = oParser.parse(sHtmlContent,sPattern)
-        #if aResult[0] is True:
+        # sPattern = '(eval\(function\(p,a,c,k,e(?:.|\s)+?\))<\/script>'
+        # aResult = oParser.parse(sHtmlContent,sPattern)
+        # if aResult[0] is True:
         #    sHtmlContent = cPacker().unpack(aResult[1][0])
 
         sPattern = 'controls preload="none" src="([^"]+)"'
         aResult = oParser.parse(sHtmlContent, sPattern)
         if aResult[0] is True:
-            api_call = aResult[1][0] #pas de choix qualité trouvé pour le moment
+            api_call = aResult[1][0]  # pas de choix qualité trouvé pour le moment
 
         if api_call:
             return True, api_call

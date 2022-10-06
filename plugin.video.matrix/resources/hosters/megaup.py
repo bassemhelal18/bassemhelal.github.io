@@ -23,8 +23,8 @@ class cHoster(iHoster):
         sHtmlContent = oRequestHandler.request()
         cookies = oRequestHandler.GetCookies() + ";"
 
-        data = re.search('Mhoa_URL\((.+?)\);',sHtmlContent).group(1)
-        data = re.findall("'(.+?)'",data)
+        data = re.search('Mhoa_URL\((.+?)\);', sHtmlContent).group(1)
+        data = re.findall("'(.+?)'", data)
 
         part1 = data[0]
         part2 = data[1]
@@ -41,22 +41,22 @@ class cHoster(iHoster):
 
         time.sleep(6)
 
-        oRequestHandler = cRequestHandler("https://download.megaup.net/?idurl=" + cidken + "&idfilename=" + file + \
-            "&idfilesize=" + size)
+        oRequestHandler = cRequestHandler("https://download.megaup.net/?idurl=" + cidken + "&idfilename=" + file +
+                                          "&idfilesize=" + size)
         oRequestHandler.addHeaderEntry('User-Agent', UA)
         sHtmlContent = oRequestHandler.request()
 
-        la = re.search('window\.location\.replace\("(.+?)"',sHtmlContent).group(1)
+        la = re.search('window\.location\.replace\("(.+?)"', sHtmlContent).group(1)
 
         oRequestHandler = cRequestHandler(la)
         oRequestHandler.disableRedirect()
         oRequestHandler.addHeaderEntry('User-Agent', UA)
         oRequestHandler.addHeaderEntry("Referer", "https://download.megaup.net/")
         oRequestHandler.addHeaderEntry("Cookie", cookies)
-        sHtmlContent = oRequestHandler.request()
+        oRequestHandler.request()
         api_call = oRequestHandler.getResponseHeader()['Location']
 
         if api_call:
-            return True,  api_call + "|User-Agent="+UA
+            return True, api_call + "|User-Agent=" + UA
 
         return False, False

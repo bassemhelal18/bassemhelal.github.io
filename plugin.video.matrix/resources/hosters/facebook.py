@@ -6,6 +6,7 @@ from resources.hosters.hoster import iHoster
 from resources.lib.comaddon import dialog
 from resources.lib.comaddon import VSlog
 
+
 class cHoster(iHoster):
 
     def __init__(self):
@@ -14,7 +15,7 @@ class cHoster(iHoster):
     def _getMediaLinkForGuest(self):
         VSlog(self._url)
 
-        qua =[]
+        qua = []
         url = []
         api_call = ''
 
@@ -29,7 +30,7 @@ class cHoster(iHoster):
                 qua.append(str(aEntry[0]))
                 url.append(str(aEntry[1]))
 
-            #dialogue qualité
+            # dialogue qualité
             api_call = dialog().VSselectqual(qua, url)
 
         if api_call:

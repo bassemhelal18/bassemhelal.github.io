@@ -9,6 +9,7 @@ from resources.hosters.hoster import iHoster
 from resources.lib.gui.hoster import cHosterGui
 from resources.lib.comaddon import VSlog
 
+
 class cHoster(iHoster):
 
     def __init__(self):
@@ -21,7 +22,7 @@ class cHoster(iHoster):
 
     def _getMediaLinkForGuest(self):
         VSlog(self._url)
-        api_call = ''
+       
 
         oRequest = cRequestHandler(self._url)
         sHtmlContent = oRequest.request()
@@ -29,11 +30,11 @@ class cHoster(iHoster):
         sPattern = "(\s*eval\s*\(\s*function(?:.|\s)+?)<\/script>"
         aResult = re.findall(sPattern, sHtmlContent)
 
-        if (aResult):
+        if aResult:
             sUnpacked = cPacker().unpack(aResult[0])
             sHtmlContent = sUnpacked
 
-            if (sHtmlContent):
+            if sHtmlContent:
 
                 oParser = cParser()
                 sPattern = "replace\(.*'(.+?)'"

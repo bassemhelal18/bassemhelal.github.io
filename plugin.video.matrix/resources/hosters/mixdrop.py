@@ -30,7 +30,7 @@ class cHoster(iHoster):
         sHtmlContent = oRequest.request()
 
         sPattern = '(\s*eval\s*\(\s*function(?:.|\s)+?)<\/script>'
-        aResult = oParser.parse(sHtmlContent,sPattern)
+        aResult = oParser.parse(sHtmlContent, sPattern)
 
         if aResult[0] is True:
             sHtmlContent = cPacker().unpack(aResult[1][0])
@@ -39,18 +39,6 @@ class cHoster(iHoster):
             aResult = oParser.parse(sHtmlContent, sPattern)
             if aResult[0] is True:
                 api_call = aResult[1][0]
-
-            #else:
-                #sPattern = 'vsrc\d+="([^"]+)"'
-                #aResult = oParser.parse(sHtmlContent, sPattern)
-                #if aResult[0] is True:
-                #    api_call = aResult[1][0]
-
-                #else:
-                #    sPattern = 'furl="([^"]+)"'
-                #    aResult = oParser.parse(sHtmlContent, sPattern)
-                #    if aResult[0] is True:
-                #        api_call = aResult[1][0]
 
             if api_call.startswith('//'):
                 api_call = 'https:' + aResult[1][0]

@@ -5,6 +5,7 @@ from resources.lib.parser import cParser
 from resources.hosters.hoster import iHoster
 from resources.lib.comaddon import VSlog
 
+
 class cHoster(iHoster):
 
     def __init__(self):

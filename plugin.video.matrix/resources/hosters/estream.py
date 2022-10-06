@@ -7,6 +7,7 @@ from resources.lib.packer import cPacker
 from resources.lib.comaddon import dialog
 from resources.lib.comaddon import VSlog
 
+
 class cHoster(iHoster):
 
     def __init__(self):
