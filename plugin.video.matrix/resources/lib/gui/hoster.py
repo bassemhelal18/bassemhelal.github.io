@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+# https://github.com/Kodi-vStream/venom-xbmc-addons
+# Venom.
 from resources.lib.gui.gui import cGui
 from resources.lib.gui.guiElement import cGuiElement
 from resources.lib.gui.contextElement import cContextElement
@@ -111,6 +112,7 @@ class cHosterGui:
 
         # Dossier Media
         oGui.createSimpleMenu(oGuiElement, oOutputParameterHandler, 'cLibrary', 'cLibrary', 'setLibrary', self.ADDON.VSlang(30324))
+
         # Upload menu uptobox
         if cInputParameterHandler().getValue('site') != 'siteuptobox' and self.ADDON.getSetting('hoster_uptobox_premium') == 'true':
             host = oHoster.getPluginIdentifier()
@@ -133,6 +135,7 @@ class cHosterGui:
         if not sHosterUrl:
             return False
 
+        
         # Petit nettoyage
         sHosterUrl = sHosterUrl.split('|')[0]
         sHosterUrl = sHosterUrl.split('?')[0]
@@ -141,6 +144,7 @@ class cHosterGui:
         # lien direct ?
         if any(sHosterUrl.endswith(x) for x in ['.mp4', '.avi', '.flv', '.m3u8', '.webm', '.mkv', '.mpd']):
             return self.getHoster('lien_direct')
+
         # Recuperation du host
         try:
             sHostName = sHosterUrl.split('/')[2]
@@ -148,20 +152,13 @@ class cHosterGui:
             sHostName = sHosterUrl
 
         if debrid:
-            # L'user a active l'url resolver ?
-            if self.ADDON.getSetting('UserUrlResolver') == 'true':
-                import urlresolver
-                hmf = urlresolver.HostedMediaFile(url=sHosterUrl)
-                if hmf.valid_url():
-                    tmp = self.getHoster('resolver')
-                    RH = sHosterUrl.split('/')[2]
-                    RH = RH.replace('www.', '')
-                    tmp.setRealHost(RH.split('.')[0].upper())
-                    return tmp
-
             # L'user a activé alldebrid ?
             if self.ADDON.getSetting('hoster_alldebrid_premium') == 'true':
                 return self.getHoster('alldebrid')
+
+            # L'user a activé realbrid ?
+            if self.ADDON.getSetting('hoster_realdebrid_premium') == 'true':
+                return self.getHoster('realdebrid')
 
             # L'user a activé debrid_link ?
             if self.ADDON.getSetting('hoster_debridlink_premium') == 'true':
@@ -413,6 +410,9 @@ class cHosterGui:
         if ('clipwatching' in sHostName) or ('highstream' in sHostName):
             return self.getHoster('clipwatching')
 
+        if ('voe' in sHostName):
+            return self.getHoster('voe')
+
         if ('goo.gl' in sHostName) or ('bit.ly' in sHostName) or ('streamcrypt' in sHostName) or ('opsktp' in sHosterUrl):
             return self.getHoster('allow_redirects')
 
@@ -496,7 +496,6 @@ class cHosterGui:
                         oHoster.setFileName(sFileName)
                         sHosterName = oHoster.getDisplayName()
                         oDialog.VSinfo(sHosterName, 'Resolve')
-
                         oHoster.setUrl(aLink[1])
                         aLink = oHoster.getMediaLink()
 

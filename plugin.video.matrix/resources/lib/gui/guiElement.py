@@ -179,11 +179,7 @@ class cGuiElement:
         return self.__sSiteName
 
     def setFileName(self, sFileName):
-        if isMatrix():
-            self.__sFileName = sFileName
-        else:
-            self.__sFileName = cUtil().titleWatched(sFileName)
-
+        self.__sFileName = cUtil().titleWatched(sFileName)
 
     def getFileName(self):
         return self.__sFileName
@@ -202,10 +198,7 @@ class cGuiElement:
             sTitle = sTitle.replace('Season', 'season').replace('Saison', 'season')
             sTitle = sTitle.replace(' - saison', ' season').replace(' – saison', ' season')\
                            .replace(' — saison', ' season')
-            sTitle = sTitle.replace("WEB-DL","").replace("BRRip","").replace("HD-TC","").replace("HDRip","").replace("HD-CAM","").replace("DVDRip","").replace("BluRay","").replace("WEBRip","").replace("DvDrip","").replace("DvDRip","").replace("DVBRip","").replace("TVRip","").replace("WEB Dl","").replace("WeB Dl","").replace("WEB DL","").replace("WeB DL","").replace("Web DL","").replace("WEB-dl","").replace("4K","").replace("BDRip","").replace("HDCAM","").replace("HDTC","").replace("HDTV","").replace("HD","").replace("HDCam","").replace("Full HD","").replace("HC","").replace("Web-dl","")
-
-            if "مدبلج" in sTitle:
-                sTitle = sTitle.replace("مدبلجة","[COLOR yellow]مدبلجة[/COLOR]").replace("مدبلجه","[COLOR yellow]مدبلجة[/COLOR]").replace("مدبلج بالمصري","[COLOR yellow]مدبلج بالمصري[/COLOR]").replace("مدبلج مصري","[COLOR yellow]مدبلج بالمصري[/COLOR]").replace("مدبلج للعربية","مدبلج").replace("مدبلج","[COLOR yellow]مدبلج[/COLOR]")
+          
 
             if not isMatrix():
                 sTitle = sTitle.decode('utf-8')
@@ -274,7 +267,11 @@ class cGuiElement:
         if ep:
             self.__Episode = ep
             self.addItemValues('Episode', self.__Episode)
-			
+
+        # on repasse en utf-8
+        if not isMatrix():
+            sTitle = sTitle.encode('utf-8')
+
         # on reformate SXXEXX Titre [tag] (Annee)
         sTitle2 = ''
         if self.__Season:
@@ -282,22 +279,8 @@ class cGuiElement:
         if self.__Episode:
             sTitle2 = sTitle2 + 'E%02d' % int(self.__Episode)
 
-        arabBuck = {"'":"ء", "|":"آ", "?":"أ", "&":"ؤ", "<":"إ", "}":"ئ", "A":"ا", "b":"ب", "p":"ة", "t":"ت", "v":"ث", "g":"ج", "H":"ح", "x":"خ", "d":"د", "*":"ذ", "r":"ر", "z":"ز", "s":"س", "$":"ش", "S":"ص", "D":"ض", "T":"ط", "Z":"ظ", "E":"ع", "G":"غ", "_":"ـ", "f":"ف", "q":"ق", "k":"ك", "l":"ل", "m":"م", "n":"ن", "h":"ه", "w":"و", "Y":"ى", "y":"ي", "F":"ً", "N":"ٌ", "K":"ٍ", "~":"ّ", "o":"ْ", "u":"ُ", "a":"َ", "i":"ِ"}
-        sTitle4 = sTitle
-        if not isMatrix():
-
-           for char in sTitle:
-               ordbuckArab = {ord(v.decode('utf8')): unicode(k) for (k, v) in arabBuck.iteritems()}
-               sTitle4 = sTitle.translate(ordbuckArab)
-        else:
-
-           for char in sTitle:
-               ordbuckArab = {ord(v):(k) for (k, v) in arabBuck.items()}
-               sTitle4 = sTitle.translate(ordbuckArab)
-
-
         # Titre unique pour marquer VU (avec numéro de l'épisode pour les séries)
-        self.__sTitleWatched = cUtil().titleWatched(sTitle4).replace(' ', '')
+        self.__sTitleWatched = cUtil().titleWatched(sTitle).replace(' ', '')
         if sTitle2:
             self.addItemValues('tvshowtitle', cUtil().getSerieTitre(sTitle))
             self.__sTitleWatched += '_' + sTitle2
@@ -311,9 +294,6 @@ class cGuiElement:
         if self.__Year:
             sTitle2 = '%s [COLOR %s](%s)[/COLOR]' % (sTitle2, sDecoColor, self.__Year)
 
-        # on repasse en utf-8
-        if not isMatrix():
-            return sTitle2.encode('utf-8')
         return sTitle2
 
     def setTitle(self, sTitle):
@@ -323,6 +303,7 @@ class cGuiElement:
             self.__sCleanTitle = re.sub('\[.+?\]|\(.+?\)', '', sTitle)
             if not self.__sCleanTitle:
                 self.__sCleanTitle = sTitle.replace('[', '').replace(']', '').replace('(', '').replace(')', '')
+
         if isMatrix():
             # Python 3 decode sTitle
             try:
@@ -356,10 +337,10 @@ class cGuiElement:
         # Py3
         if isMatrix():
             try:
-
-                self.__sDescription = str(sDescription.encode('latin-1'),'utf-8')
-
-
+                if 'Ã' in sDescription or '\\xc' in sDescription:
+                    self.__sDescription = str(sDescription.encode('latin-1'), 'utf-8')
+                else:
+                    self.__sDescription = sDescription
             except:
                 self.__sDescription = sDescription
         else:
